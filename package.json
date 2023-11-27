@@ -2,7 +2,7 @@
 	"scripts": {
 		"push": "rollup -cw --environment DEST:main --bundleConfigAsCjs",
 		"local": "rollup -cw --environment DEST:local --bundleConfigAsCjs",
-		"build": "rollup -cw",
+		"build": "rollup -cw --bundleConfigAsCjs",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"dependencies": {
