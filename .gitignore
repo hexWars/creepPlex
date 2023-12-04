@@ -212,3 +212,4 @@ dist
 # other
 .secret.json
 .screeps.json
+.idea
