@@ -38,9 +38,8 @@ var upgrader: CreepLifeCycle = {
             }
         }
         else {
-            var sources = creep.room.find(FIND_SOURCES);
-            if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[1], { visualizePathStyle: { stroke: '#ffaa00' } });
+            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, { visualizePathStyle: { stroke: '#ffaa00' } });
             }
         }
         return false
@@ -48,7 +47,7 @@ var upgrader: CreepLifeCycle = {
     // 当container修好就去container里拿
     source(creep: Creep): boolean {
         const source = <Source>Game.getObjectById(creep.memory.sourceId)
-        const container = creep.room.memory.containerIds[source.id]
+        const container = <StructureContainer>Game.getObjectById(creep.room.memory.containerIds[source.id]);
         // TODO: 不确定正不正确,大概需要调试
         if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);

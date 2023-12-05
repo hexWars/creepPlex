@@ -78,4 +78,4 @@ var harvester: CreepLifeCycle = {
         return true;
     }
 }
-module.exports = upgrader
+module.exports = harvester
