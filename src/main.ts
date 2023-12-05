@@ -1,9 +1,5 @@
 import { errorMapper } from './modules/errorMapper'
 import { mount } from './mount'
-import { harvester } from './role/harvester'
-import { upgrader } from './role/upgrader'
-import { builder } from './role/builder'
-
 
 
 export const loop = errorMapper(() => {

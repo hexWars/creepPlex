@@ -1,26 +1,80 @@
 /**
  * harvester逻辑
- * source: 从指定地方取出资源
- * target: 升级指定的 Controller 中
+ * source: 从指定地方挖资源
+ * target: 存放资源或者建造建筑
  * 
- * @param sourceId 要挖的矿 id
+ * @param creep 
  */
 var harvester: CreepLifeCycle = {
-    // 采集能量矿
-    source(creep: Creep, objectId: Id<_HasId>): boolean {
-        const source0: Source = <Source>Game.getObjectById(objectId)
-        if (creep.harvest(source0) == ERR_NOT_IN_RANGE) creep.moveTo(source0)
+    // 存储的是sourceId
+    // 寻找source旁边的container或者工地进行移动
+    prepare(creep: Creep): boolean {
+        var target;
+        const source = <Source>Game.getObjectById(creep.memory.targetId)
 
-        // 自己身上的能量装满了，返回 true（切换至 target 阶段）
-        return creep.store.getFreeCapacity() <= 0
+        // 找container
+        const containers = source.pos.findInRange(FIND_MY_STRUCTURES, 1,
+            { filter: { structureType: StructureContainer } }
+        )
+        var container;
+        if (containers.length > 0) {
+            // 找到container
+            container = containers[0]
+            target = container
+            // 缓存
+        } else {
+            // 继续找container建筑工地
+            const structures = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1)
+            if (structures.length > 0) {
+                // 找到工地
+                var structure = structures[0]
+                target = structure
+            } else {
+                console.log("异常: 没有container建筑工地")
+                return false
+            }
+        }
+        // 抵达位置了就准备完成
+        const range = target instanceof Source ? 1 : 0
+        if (creep.pos.inRangeTo(target.pos, range)) {
+            return true
+        } else {
+            creep.moveTo(target, { reusePath: 10, visualizePathStyle: { stroke: '#ffffff' } });
+            return false
+
+        }
     },
-    // 升级控制器
-    target(creep: Creep): boolean {
-        const controller = creep.room.controller
-        if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE) creep.moveTo(controller)
+    // 采集资源对对container进行建造和维护
+    source(creep: Creep): boolean {
+        creep.say('🚧')
 
-        // 自己身上的能量没有了，返回 true（切换至 source 阶段）
-        return creep.store[RESOURCE_ENERGY] <= 0
+        const source: Source = <Source>Game.getObjectById(creep.memory.sourceId)
+
+        // 允许采集一下工作一下，这样效率合适的话不会变低
+        if (creep.store[RESOURCE_ENERGY] <= 0) {
+            creep.harvest(source);
+            return false;
+        } else {
+            // 找container工地并建造
+            const structures = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1)
+            if (structures.length > 0) {
+                const structure = structures[0]
+                creep.build(structure)
+                return false
+            } else {
+                return true
+            }
+        }
+    },
+    // 放到container里，直接掉落，快死了就丢出去
+    target(creep: Creep): boolean {
+        const source = <Source>Game.getObjectById(creep.memory.sourceId);
+        creep.harvest(source);
+
+        if (creep.ticksToLive < 2) {
+            creep.drop(RESOURCE_ENERGY)
+        }
+        return false;
     }
 }
 module.exports = upgrader

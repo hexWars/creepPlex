@@ -20,12 +20,23 @@ interface CreepLifeCycle {
 }
 
 /**
- * 房间内存
+ * room 内存扩展
  */
 interface RoomMemory {
-
+    
     // 房间内的资源和建筑 id
     sourceIds: string[]
     mineralId
     containerIds: Map<string, string>
+}
+/**
+ * creep 内存拓展
+ */
+interface CreepMemory {
+    // creep 的角色
+    role: string
+    // 要采集的资源 Id
+    sourceId?: string
+    // 要存放到的目标建筑
+    targetId?: string
 }

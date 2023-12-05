@@ -16,7 +16,7 @@ export const init = {
             // mineral
             if (!room.memory.mineralId) {
                 room.memory.mineralId = [];
-                for (var mineral in room.find(FIND_MINERALS) {
+                for (var mineral in room.find(FIND_MINERALS)) {
                     var typeMineral = mineral as unknown as Mineral
                     room.memory.mineralId.push(typeMineral.id);
                 }
@@ -24,6 +24,7 @@ export const init = {
         }
     },
     /**
+     * 废弃!!!
      * 对source周围的container进行绑定
      * 即生成containerIds
      */
@@ -33,7 +34,7 @@ export const init = {
             if (room.memory.sourceIds) {
                 for (const sourceId in room.memory.sourceIds) {
                     const source = <Source>Game.getObjectById(sourceId);
-                    // TODO: 搜索周围8格，如果有container(建筑),那么加入source的内存
+                    // TODO: 搜索周围8格，如果有container(建筑),那么加入source的内存，有问题，区域内搜索好像不对
                     var objects = room.lookForAtArea(LOOK_STRUCTURES, source.pos.y - 1, source.pos.x - 1, source.pos.y + 1, source.pos.x + 1, true)
                     if (objects.length > 0) {
                         room.memory.containerIds[sourceId] = objects[0].structure.id;
