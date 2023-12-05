@@ -1,7 +1,8 @@
 /**
  * harvester逻辑
- * source: 从指定地方挖资源
- * target: 存放资源或者建造建筑
+ * prepare: 前往container(工地)
+ * source:  修container
+ * target:  采集source
  * 
  * @param creep 
  */
@@ -21,7 +22,7 @@ var harvester: CreepLifeCycle = {
             // 找到container
             container = containers[0]
             target = container
-            // 缓存
+            // TODO: 缓存
         } else {
             // 继续找container建筑工地
             const structures = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1)
@@ -74,7 +75,7 @@ var harvester: CreepLifeCycle = {
         if (creep.ticksToLive < 2) {
             creep.drop(RESOURCE_ENERGY)
         }
-        return false;
+        return true;
     }
 }
 module.exports = upgrader

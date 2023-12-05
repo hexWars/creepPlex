@@ -23,7 +23,7 @@ interface CreepLifeCycle {
  * room 内存扩展
  */
 interface RoomMemory {
-    
+
     // 房间内的资源和建筑 id
     sourceIds: string[]
     mineralId
@@ -39,4 +39,7 @@ interface CreepMemory {
     sourceId?: string
     // 要存放到的目标建筑
     targetId?: string
+
+    // 临时
+    upgrading: boolean
 }
